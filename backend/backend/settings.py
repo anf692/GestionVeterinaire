@@ -26,7 +26,7 @@ SECRET_KEY = 'django-insecure-yj^z1go@z)zh=vrw)e&=css$squuiab$0xn5)x$3ega@^fz(q=
 DEBUG = True
 
 ALLOWED_HOSTS = []
-
+AUTH_USER_MODEL = 'accounts.CustomUser'
 
 # Application definition
 
@@ -42,7 +42,20 @@ INSTALLED_APPS = [
     'owners',
     'patients',
     'rest_framework',
+    'rest_framework_simplejwt.token_blacklist',
 ]
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ),
+}
+
+SIMPLE_JWT = {
+    'AUTH_HEADER_TYPES': ('Bearer',),
+    'BLACKLIST_AFTER_ROTATION': True,
+    'ROTATE_REFRESH_TOKENS': False,
+}
 
 
 MIDDLEWARE = [

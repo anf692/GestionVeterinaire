@@ -1,5 +1,5 @@
 from django.db import models
-from owners.models import Proprietaire
+from owners.models import Owner
 
 class Patient(models.Model):
     ANIMAL_TYPES = [
@@ -19,7 +19,7 @@ class Patient(models.Model):
     naissance = models.DateField()
     poids = models.FloatField()
     sexe = models.CharField(max_length=1, choices=SEX_CHOICES)
-    proprietaire = models.ForeignKey(Proprietaire, related_name='patients', on_delete=models.CASCADE)
+    proprietaire = models.ForeignKey(Owner, related_name='patients', on_delete=models.CASCADE)
 
     def __str__(self):
         return f"{self.nom} ({self.type})"
