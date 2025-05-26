@@ -1,6 +1,5 @@
 from django.db import models
-from owners.models import Owner
-
+from owners.models import Proprietaire
 
 class Patient(models.Model):
     ANIMAL_TYPES = [
@@ -9,22 +8,18 @@ class Patient(models.Model):
         ('lapin', 'Lapin'),
     ]
 
-    name = models.CharField(max_length=100)
-    animal_type = models.CharField(max_length=10, choices=ANIMAL_TYPES)
-    breed = models.CharField(max_length=100)
-    birth_date = models.DateField()
-    weight = models.FloatField()
-    sex = models.CharField(max_length=10)
-    owner = models.ForeignKey(Owner, on_delete=models.CASCADE, related_name='patients')
+    SEX_CHOICES = [
+        ('M', 'Mâle'),
+        ('F', 'Femelle'),
+    ]
+
+    nom = models.CharField(max_length=100)
+    Type = models.CharField(max_length=10, choices=ANIMAL_TYPES)
+    race = models.CharField(max_length=100)
+    naissance = models.DateField()
+    poids = models.FloatField()
+    sexe = models.CharField(max_length=1, choices=SEX_CHOICES)
+    proprietaire = models.ForeignKey(Proprietaire, related_name='patients', on_delete=models.CASCADE)
 
     def __str__(self):
-        return f"{self.name} ({self.animal_type})"
-class Consultation(models.Model):
-    patient = models.ForeignKey(Patient, on_delete=models.CASCADE, related_name='consultations')
-    date = models.DateField(auto_now_add=True)
-    notes = models.TextField()
-    prescription = models.TextField(blank=True)
-
-    def __str__(self):
-        return f"Consultation du {self.date} - {self.patient.name}"
-    
+        return f"{self.nom} ({self.type})"
