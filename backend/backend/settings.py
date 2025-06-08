@@ -26,8 +26,6 @@ SECRET_KEY = 'django-insecure-yj^z1go@z)zh=vrw)e&=css$squuiab$0xn5)x$3ega@^fz(q=
 DEBUG = True
 
 ALLOWED_HOSTS = []
-AUTH_USER_MODEL = 'accounts.CustomUser'
-
 # Application definition
 
 INSTALLED_APPS = [
@@ -38,35 +36,53 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
-    'accounts',
-    'owners',
-    'patients',
     'rest_framework',
-    'rest_framework_simplejwt.token_blacklist',
+    'corsheaders',  # Pour autoriser les requêtes frontend
+    'accounts', 
+    'owners',  
+    'patients',
+    'rest_framework.authtoken',
 ]
 
+
+
+# Authentification personnalisée 
+AUTH_USER_MODEL = 'accounts.User'
+
 REST_FRAMEWORK = {
-    'DEFAULT_AUTHENTICATION_CLASSES': (
-        'rest_framework_simplejwt.authentication.JWTAuthentication',
-    ),
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.SessionAuthentication',
+        'rest_framework.authentication.TokenAuthentication', 
+    ],
+    'DEFAULT_PERMISSION_CLASSES': [
+            'rest_framework.permissions.IsAuthenticated',
+    ],
 }
 
-SIMPLE_JWT = {
-    'AUTH_HEADER_TYPES': ('Bearer',),
-    'BLACKLIST_AFTER_ROTATION': True,
-    'ROTATE_REFRESH_TOKENS': False,
-}
-
-
-MIDDLEWARE = [
+MIDDLEWARE = [ 
+    'django.middleware.common.CommonMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
-    'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+
+    'corsheaders.middleware.CorsMiddleware',
+    'django.middleware.common.CommonMiddleware',
 ]
+
+# Autoriser toutes les origines (pour le développement)
+CORS_ALLOW_ALL_ORIGINS = True
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:3000",
+]
+CORS_ALLOW_HEADERS = [
+    'authorization',
+    'content-type',
+]
+CORS_ALLOW_CREDENTIALS = True
+
 
 ROOT_URLCONF = 'backend.urls'
 

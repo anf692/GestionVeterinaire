@@ -1,13 +1,474 @@
-body {
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+:root {
+  --green: #43a047;
+  --green-dark: #388e3c;
+  --green-light: #66bb6a;
+  --green-bg: #f1f8f4;
+  --green-text: #1b5e20;
+  --white: #ffffff;
+  --error: #e74c3c;
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  transition: all 0.3s ease;
+}
+
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: var(--green-bg);
+  color: var(--green-text);
+}
+
+/* Boutons */
+.button {
+  background: linear-gradient(135deg, var(--green), var(--green-dark));
+  color: var(--white);
+  padding: 0.6rem 1.2rem;
+  font-weight: 600;
+  border: none;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(67, 160, 71, 0.25);
+  cursor: pointer;
+  text-decoration: none; /* Suppression du soulignement */
+}
+
+.button:hover {
+  background: var(--green-light);
+  transform: translateY(-2px);
+  text-decoration: none; /* Assurer aucun soulignement au hover */
+}
+
+.button a {
+  text-decoration: none; /* Pas de soulignement sur liens dans bouton */
+}
+
+/* Cartes */
+.card {
+  background: var(--white);
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  padding: 1.5rem;
+  margin: 1rem 0;
+}
+
+.card h2{
+  margin-bottom: 10px;
+}
+
+/* Formulaire */
+.form-group {
+  margin-bottom: 1.5rem; /* Plus d'espace entre les champs */
+}
+
+.form-group label {
+  margin-bottom: 0.4rem;
+  display: block;
+}
+
+.form-group input,
+.form-group select {
+  width: 100%;
+  padding: 0.6rem;
+  border: 1px solid var(--green-light);
+  border-radius: 6px;
+  outline-color: var(--green);
+}
+
+/* Erreurs */
+.error,
+.error-text {
+  color: var(--error);
+  font-size: 0.85rem;
+}
+
+/* Liste d’éléments */
+.list-container {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.list-item {
+  background: var(--white);
+  border-left: 5px solid var(--green);
+  padding: 1rem;
+  border-radius: 6px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.list-item:hover {
+  background-color: var(--green-bg);
+}
+
+.sidebar {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100vh;
+  background: linear-gradient(to bottom, #388e3c, #2e7d32);
+  width: 200px;
+  padding: 1rem;
+  color: white;
+}
+
+.sidebar ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.sidebar li {
+  margin-bottom: 1.5rem;
+}
+
+.sidebar a {
+  color: white;
+  text-decoration: none;
+  display: block;
+  padding: 0.5rem;
+  border-radius: 4px;
+  transition: background-color 0.3s;
+}
+
+.sidebar a:hover {
+  background-color: rgba(255, 255, 255, 0.2);
+}
+
+/* Bloc utilisateur connecté en bas */
+.sidebar-user {
+  padding-top: 1rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.3);
+  text-align: center;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-size: 0.9rem;
+  line-height: 1.4;
+  color: #a5d6a7;
+}
+
+.sidebar-user strong {
+  display: block;
+  margin-top: 0.3rem;
+  font-size: 1.1rem;
+  color: var(--primary-color); 
+}
+
+.sidebar-user small {
+  color: var(--secondary-color); 
+}
+
+.sidebar a:hover,
+.sidebar .active-link {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+/* Footer */
+.footer {
+  background: linear-gradient(to bottom, #388e3c, #2e7d32);
+  color: white;
+  text-align: center;
+  padding: 1rem;
+}
+
+.footer-links a {
+  color: white;
+  margin-left: 1rem;
+  text-decoration: none;
+}
+
+.footer-links a:hover {
+  text-decoration: underline;
+}
+
+/* Conteneur principal détails */
+.detail-container {
+  background: linear-gradient(135deg, #e8f5e9, #c8e6c9);
+  border: 2px solid #4caf50;
+  border-radius: 16px;
+  padding: 2.5rem 3rem;
+  max-width: 600px;
+  margin: 3rem auto;
+  box-shadow: 0 8px 24px rgba(76, 175, 80, 0.3);
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.detail-container:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 12px 32px rgba(76, 175, 80, 0.5);
+}
+
+/* Titre */
+.detail-title {
+  font-size: 2.2rem;
+  font-weight: 700;
+  color: #2e7d32;
+  margin-bottom: 1.5rem;
+  border-bottom: 3px solid #66bb6a;
+  padding-bottom: 8px;
+}
+
+/* Infos (paragraphes) */
+.detail-info p {
+  font-size: 1.1rem;
+  color: #1b5e20;
+  margin: 0.8rem 0;
+  line-height: 1.6;
+  padding-left: 1rem;
+  border-left: 4px solid #388e3c;
+  background-color: #f1fbf3;
+  border-radius: 6px;
+}
+
+/* Mots importants en gras */
+.detail-info strong {
+  color: #2e7d32;
+  font-weight: 600;
+}
+
+/* Message "vide" */
+.detail-empty {
+  background-color: #f0fff4;
+  border: 2px dashed #81c784;
+  color: #4caf50;
+  padding: 1.5rem 2rem;
+  border-radius: 12px;
+  font-style: italic;
+  font-size: 1.1rem;
+  text-align: center;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+/* Bouton retour */
+.detail-back-btn {
+  display: inline-block;
+  margin-bottom: 1.8rem;
+  background-color: #4caf50;
+  color: white;
+  font-weight: 600;
+  padding: 0.5rem 1.2rem;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.25s;
+  text-decoration: none;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+.detail-back-btn:hover {
+  background-color: #388e3c;
+}
+
+/* Table */
+.table-container {
+  overflow-x: auto;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  background: var(--white);
+}
+
+th {
+  background: var(--green);
+  color: white;
+  padding: 0.75rem;
+}
+
+td {
+  padding: 0.75rem;
+  border-bottom: 1px solid #ddd;
+}
+
+tr:hover {
+  background-color: #f1f8f4;
+}
+
+/* Header & Layout */
+.header {
+  background: linear-gradient(to right, var(--green-dark), var(--green));
+  color: white;
+  padding: 1rem 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+.nav-links a {
+  color: white;
+  margin-left: 1rem;
+  text-decoration: none;
+}
+
+.nav-links a:hover {
+  text-decoration: underline;
+}
+
+.main-content {
+  display: flex;
+  flex: 1;
+  background: linear-gradient(to bottom, #388e3c, #2e7d32);
+}
+
+.content {
+  flex: 1;
+  padding: 2rem;
+  background: #f9fdfb;
+}
+
+.app-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+/* Conteneur principal login */
+.login-container {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: linear-gradient(135deg, #a8e6a1, #4caf50);
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  padding: 2rem;
+}
+
+/* Formulaire */
+.login-form {
+  background-color: white;
+  padding: 3rem 3.5rem;
+  border-radius: 16px;
+  box-shadow: 0 12px 32px rgba(76, 175, 80, 0.3);
+  width: 100%;
+  max-width: 420px;
+  text-align: center;
+  transition: box-shadow 0.3s ease;
+}
+
+.login-form:hover {
+  box-shadow: 0 18px 48px rgba(76, 175, 80, 0.5);
+}
+
+/* Titre du formulaire */
+.login-form h2 {
+  color: #2e7d32;
+  margin-bottom: 2rem;
+  font-weight: 700;
+  font-size: 2rem;
+}
+
+/* Labels */
+.login-form label {
+  display: block;
+  text-align: left;
+  margin-bottom: 0.5rem;
+  color: #388e3c;
+  font-weight: 600;
+}
+
+/* Inputs */
+.login-form input[type="text"],
+.login-form input[type="password"] {
+  width: 100%;
+  padding: 0.65rem 1rem;
+  margin-bottom: 1.5rem;
+  border: 2px solid #a5d6a7;
+  border-radius: 10px;
+}
+
+.patient h1{
+  margin-bottom: 50px;
+  text-align: center;
+}
+
+.owner h1{
+  margin-bottom: 50px;
+  text-align: center;
+}
+
+/* Container global page d’accueil */
+.home-page {
+  max-width: 900px;
+  margin: 3rem auto;
+  padding: 0 1.5rem;
+  text-align: center;
+}
+
+/* Titre principal */
+.home-page h1 {
+  font-size: 2.8rem;
+  font-weight: 700;
+  margin-bottom: 3rem;
+  color: var(--green-dark);
+}
+
+/* Conteneur cartes */
+.dashboard-cards {
+  display: flex;
+  gap: 2rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+/* Style commun cartes */
+.cardhome {
+  background: var(--white);
+  border-radius: 12px;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
+  padding: 2rem 2.5rem;
+  flex: 1 1 320px;
+  max-width: 400px;
+  text-align: left;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  cursor: default;
+}
+
+.cardhome:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 12px 32px rgba(67, 160, 71, 0.3);
+}
+
+/* Titres cartes avec icônes */
+.home-page h2 {
+  display: flex;
+  align-items: center;
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: var(--green-text);
+  margin-bottom: 1rem;
+}
+
+.home-page h2 svg {
+  flex-shrink: 0;
+  font-size: 2rem;
+  margin-right: 0.8rem;
+  color: var(--green);
+}
+
+/* Texte description cartes */
+.cardhome p {
+  font-size: 1.1rem;
+  line-height: 1.5;
+  color: #356b28;
+}
+
+/* Carte connexion (centrée) */
+.cardhome[style*="text-align: center"] {
+  max-width: 480px;
+  margin: 0 auto;
+}
+
+/* Responsive */
+@media (max-width: 700px) {
+  .dashboard-cardhomes {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .cardhome {
+    max-width: 100%;
+  }
 }
