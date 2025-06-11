@@ -10,7 +10,6 @@ export default function Sidebar() {
       <ul>
         <li><Link to="/owners">📋 Propriétaires</Link></li>
         <li><Link to="/patients">🐶 Patients</Link></li>
-        <li><Link to="/login">🔐 Déconnexion</Link></li>
       </ul>
 
       {user && (
