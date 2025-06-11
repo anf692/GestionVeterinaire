@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { useNavigate, useParams } from 'react-router-dom';
 
-const PatientForm = () => {
+const PatientForm = ({ initialData = null, onSubmit }) => {
   const [patient, setPatient] = useState({
     name: '',
     animal_type: '',
@@ -12,25 +11,20 @@ const PatientForm = () => {
     sex: '',
     owner: '',
   });
-  const [owners, setOwners] = useState([]);
-  const navigate = useNavigate();
-  const { id } = useParams();
 
-  const isEditMode = !!id;
+  const [owners, setOwners] = useState([]);
 
   useEffect(() => {
-    // Récupère la liste des propriétaires depuis le backend
     axios.get('http://localhost:8000/api/owners/')
       .then((res) => setOwners(res.data))
       .catch((err) => console.error('Erreur récupération owners:', err));
+  }, []);
 
-    // Si on est en mode édition, récupère les données du patient
-    if (isEditMode) {
-      axios.get(`http://localhost:8000/api/patients/${id}/`)
-        .then((res) => setPatient(res.data))
-        .catch((err) => console.error('Erreur récupération patient:', err));
+  useEffect(() => {
+    if (initialData) {
+      setPatient(initialData);
     }
-  }, [id, isEditMode]);
+  }, [initialData]);
 
   const handleChange = (e) => {
     setPatient({ ...patient, [e.target.name]: e.target.value });
@@ -38,21 +32,13 @@ const PatientForm = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-
-    const method = isEditMode ? axios.put : axios.post;
-    const url = isEditMode
-      ? `http://localhost:8000/api/patients/${id}/`
-      : 'http://localhost:8000/api/patients/';
-
-    method(url, patient)
-      .then(() => navigate('/patients'))
-      .catch((err) => console.error('Erreur sauvegarde patient:', err));
+    onSubmit(patient); 
   };
 
   return (
     <div className="detail-container">
       <h2 className="detail-title">
-        {isEditMode ? 'Modifier le patient' : 'Ajouter un patient'}
+        {initialData ? 'Modifier le patient' : 'Ajouter un patient'}
       </h2>
       <form onSubmit={handleSubmit}>
         <div className="form-group">
@@ -147,11 +133,11 @@ const PatientForm = () => {
         </div>
 
         <button type="submit" className="button">
-          {isEditMode ? 'Mettre à jour' : 'Ajouter'}
+          {initialData ? 'Mettre à jour' : 'Ajouter'}
         </button>
       </form>
     </div>
   );
-};  
+};
 
 export default PatientForm;
