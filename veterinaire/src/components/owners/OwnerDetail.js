@@ -1,30 +1,27 @@
-// src/components/owners/OwnerDetail.js
-import React, { useEffect, useState } from 'react';
-import { getOwner } from '../../services/ownerService';
-import { useParams, Link } from 'react-router-dom';
 
-const OwnerDetail = () => {
-  const { id } = useParams();
-  const [owner, setOwner] = useState(null);
+import React from 'react';
+import '../../index.css';
 
-  useEffect(() => {
-    getOwner(id).then(res => setOwner(res.data));
-  }, [id]);
+export default function OwnerDetail({ owner }) {
+  if (!owner) {
+    return (
+      <div className="owner-detail-empty">
+        Aucun propriétaire sélectionné
+      </div>
+    );
+  }
 
-  if (!owner) return <p>Chargement...</p>;
 
   return (
-    <div>
-      <h2>Détails du Propriétaire</h2>
-      <p><strong>Nom :</strong> {owner.nom}</p>
-      <p><strong>Prénom :</strong> {owner.prenom}</p>
-      <p><strong>Adresse :</strong> {owner.adresse}</p>
-      <p><strong>Téléphone :</strong> {owner.telephone}</p>
-      <p><strong>Email :</strong> {owner.email}</p>
-      <Link to={`/owners/edit/${owner.id}`}>Modifier</Link>
+    <div className="owner-detail-container">
+      <h3 className="owner-detail-title">👤 Détails du Propriétaire</h3>
+      <div className="owner-detail-info">
+        <p><strong>Nom :</strong> {owner.first_name} {owner.last_name}</p>
+        <p><strong>Adresse :</strong> {owner.address}</p>
+        <p><strong>Téléphone :</strong> {owner.phone}</p>
+        <p><strong>Email :</strong> {owner.email}</p>
+      </div>
     </div>
   );
-};
+}
 
-export default OwnerDetail;
- 

@@ -1,56 +1,91 @@
 // src/components/owners/OwnerForm.js
 import React, { useState, useEffect } from 'react';
-import { createOwner, updateOwner, getOwner } from '../../services/ownerService';
-import { useNavigate, useParams } from 'react-router-dom';
 
-const OwnerForm = () => {
-  const [formData, setFormData] = useState({
-    nom: '',
-    prenom: '',
-    adresse: '',
-    telephone: '',
-    email: ''
+
+const OwnerForm = ({ onSubmit, initialData }) => {
+  const [owner, setOwner] = useState({
+    first_name: '',
+    last_name: '',
+    email: '',
+    phone: '',
+    address: '',
   });
 
-  const { id } = useParams();
-  const navigate = useNavigate();
-
   useEffect(() => {
-    if (id) {
-      getOwner(id).then(res => setFormData(res.data));
+    if (initialData) {
+      setOwner(initialData);
     }
-  }, [id]);
+  }, [initialData]);
 
   const handleChange = (e) => {
-    setFormData({...formData, [e.target.name]: e.target.value});
+    setOwner({ ...owner, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
-    if (id) {
-      await updateOwner(id, formData);
-    } else {
-      await createOwner(formData);
-    }
-    navigate('/owners');
+    onSubmit(owner);
   };
 
   return (
-    <div>
-      <h2>{id ? "Modifier" : "Ajouter"} un propriétaire</h2>
+    <div className="detail-container">
+      <h2>{initialData ? 'Modifier le propriétaire' : 'Ajouter un propriétaire'}</h2>
       <form onSubmit={handleSubmit}>
-        {["nom", "prenom", "adresse", "telephone", "email"].map(field => (
-          <div key={field}>
-            <label>{field}</label>
-            <input
-              name={field}
-              value={formData[field]}
-              onChange={handleChange}
-              required
-            />
-          </div>
-        ))}
-        <button type="submit">Enregistrer</button>
+        <div className="form-group">
+          <label>Prénom</label>
+          <input
+            type="text"
+            name="first_name"
+            value={owner.first_name}
+            onChange={handleChange}
+            required
+          />
+        </div>
+
+        <div className="form-group">
+          <label>Nom</label>
+          <input
+            type="text"
+            name="last_name"
+            value={owner.last_name}
+            onChange={handleChange}
+            required
+          />
+        </div>
+
+        <div className="form-group">
+          <label>Email</label>
+          <input
+            type="email"
+            name="email"
+            value={owner.email}
+            onChange={handleChange}
+          />
+        </div>
+
+        <div className="form-group">
+          <label>Téléphone</label>
+          <input
+            type="tel"
+            name="phone"
+            value={owner.phone}
+            onChange={handleChange}
+          />
+        </div>
+
+        <div className="form-group">
+          <label>Adresse</label>
+          <input
+            type="text"
+            name="address"
+            value={owner.address}
+            onChange={handleChange}
+          />
+        </div>
+
+        <button type="submit" className="button">
+          {initialData ? 'Mettre à jour' : 'Ajouter'}
+        </button>
+
       </form>
     </div>
   );
