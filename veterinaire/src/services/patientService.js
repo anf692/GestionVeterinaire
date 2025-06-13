@@ -1,11 +1,7 @@
+
 import axios from "axios";
+import api from './api';
 
-const API_URL = "http://localhost:8000/api/patients/";
-
-export const getPatients = async () => {
-  const response = await axios.get(API_URL);
-  return response.data;
-};
 
 export const getPatientById = async (id) => {
   const response = await axios.get(`${API_URL}${id}/`);

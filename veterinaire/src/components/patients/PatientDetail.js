@@ -1,36 +1,27 @@
-import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
-import { getPatientById } from "../../services/patientService";
 
-const PatientDetail = () => {
-  const { id } = useParams();
-  const [patient, setPatient] = useState(null);
+import React from 'react';
+import '../../index.css';
 
-  useEffect(() => {
-    const fetchPatient = async () => {
-      try {
-        const data = await getPatientById(id);
-        setPatient(data);
-      } catch (error) {
-        console.error("Erreur de récupération du patient :", error);
-      }
-    };
-
-    fetchPatient();
-  }, [id]);
-
-  if (!patient) return <p>Chargement...</p>;
+export default function PatientDetail({ patient }) {
+  if (!patient) {
+    return (
+      <div className="patient-detail-empty">
+        Aucun patient sélectionné
+      </div>
+    );
+  }
 
   return (
-    <div>
-      <h2>Détails du Patient</h2>
-      <p><strong>Nom :</strong> {patient.nom}</p>
-      <p><strong>Type :</strong> {patient.type_animal}</p>
-      <p><strong>Race :</strong> {patient.race}</p>
-      <p><strong>Date de Naissance :</strong> {patient.date_naissance}</p>
-      <p><strong>Propriétaire :</strong> {patient.proprietaire.nom}</p>
+    <div className="patient-detail-container">
+      <h3 className="patient-detail-title">🐾 Détails de l'animal</h3>
+      <div className="patient-detail-info">
+        <p><strong>Nom :</strong> {patient.name}</p>
+        <p><strong>Type :</strong> {patient.animal_type}</p>
+        <p><strong>Race :</strong> {patient.breed}</p>
+        <p><strong>Date de naissance :</strong> {patient.birth_date}</p>
+        <p><strong>Poids :</strong> {patient.weight} kg</p>
+        <p><strong>Sexe :</strong> {patient.sex}</p>
+      </div>
     </div>
   );
-};
-
-export default PatientDetail;
+}

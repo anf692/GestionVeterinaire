@@ -1,39 +1,65 @@
-import React, { useEffect, useState } from "react";
-import { getPatients } from "../../services/patientService";
 
-const PatientList = () => {
-  const [patients, setPatients] = useState([]);
-  const [loading, setLoading] = useState(true);
+  // src/components/patients/PatientList.js
+  import React, { useEffect, useState } from 'react';
+  import { useNavigate, Link } from 'react-router-dom';
+  import { getPatients, deletePatient } from '../../services/patientService';
+  import { useAlert } from '../../contexts/AlertContext';
+  import { capitalize } from '../../utils/formatters';
 
-  useEffect(() => {
+  const PatientList = ({ ownerFilter = null, refresh }) => {
+    const [patients, setPatients] = useState([]);
+    const { showAlert } = useAlert();
+    const navigate = useNavigate();
+
     const fetchPatients = async () => {
       try {
-        const data = await getPatients();
-        setPatients(data);
-      } catch (error) {
-        console.error("Erreur de récupération des patients :", error);
-      } finally {
-        setLoading(false);
+        const res = await getPatients(ownerFilter);
+        setPatients(res.data);
+      } catch {
+        showAlert('Erreur de chargement', 'error');
       }
     };
 
-    fetchPatients();
-  }, []);
+    useEffect(() => {
+      fetchPatients();
+    }, [ownerFilter, refresh]);
 
-  if (loading) return <p>Chargement...</p>;
+    const handleDelete = async (id) => {
+      if (window.confirm("Êtes-vous sûr de vouloir supprimer ce patient ?")) {
+        try {
+          await deletePatient(id);
+          showAlert("Patient supprimé avec succès", "success");
+          fetchPatients();
+        } catch {
+          showAlert("Erreur lors de la suppression", "error");
+        }
+      }
+    };
 
-  return (
-    <div>
-      <h2>Liste des Patients</h2>
-      <ul>
-        {patients.map((patient) => (
-          <li key={patient.id}>
-            {patient.nom} - {patient.type_animal} ({patient.proprietaire.nom})
-          </li>
-        ))}
-      </ul>
-    </div>
-  );
-};
+    return (
+      <div className="card">
+        <h2>Liste des Patients</h2>
+        {patients.length === 0 ? (
+          <p>Aucun patient trouvé</p>
+        ) : (
+          <div className="list-container">
+            {patients.map((patient) => (
+              <div key={patient.id} className="list-item">
+                <div>
+                  <h3>{patient.name}</h3>
+                  <p>{capitalize(patient.animal_type)} - {patient.breed}</p>
+                </div>
+                <Link to={`/patients/${patient.id}/edit`} className="button">Modifier</Link>
+                <button className="button" onClick={() => handleDelete(patient.id)}>Supprimer</button>
+                <Link to={`/patients/${patient.id}`} className="button">
+                  Voir détails
+                </Link>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+    );
+  };
 
-export default PatientList;
+  export default PatientList;

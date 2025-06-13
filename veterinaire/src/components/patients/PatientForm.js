@@ -1,37 +1,143 @@
-import React, { useState } from "react";
-import { createPatient, updatePatient } from "../../services/patientService";
 
-const PatientForm = ({ patient }) => {
-  const [formData, setFormData] = useState(
-    patient || { nom: "", type_animal: "", race: "", date_naissance: "", proprietaire_id: "" }
-  );
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
+
+const PatientForm = ({ initialData = null, onSubmit }) => {
+  const [patient, setPatient] = useState({
+    name: '',
+    animal_type: '',
+    breed: '',
+    birth_date: '',
+    weight: '',
+    sex: '',
+    owner: '',
+  });
+
+  const [owners, setOwners] = useState([]);
+
+  useEffect(() => {
+    axios.get('http://localhost:8000/api/owners/')
+      .then((res) => setOwners(res.data))
+      .catch((err) => console.error('Erreur récupération owners:', err));
+  }, []);
+
+  useEffect(() => {
+    if (initialData) {
+      setPatient(initialData);
+    }
+  }, [initialData]);
 
   const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    setPatient({ ...patient, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
-    try {
-      if (patient) {
-        await updatePatient(patient.id, formData);
-      } else {
-        await createPatient(formData);
-      }
-    } catch (error) {
-      console.error("Erreur lors de l'enregistrement du patient :", error);
-    }
+    onSubmit(patient); 
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <input type="text" name="nom" value={formData.nom} onChange={handleChange} placeholder="Nom" required />
-      <input type="text" name="type_animal" value={formData.type_animal} onChange={handleChange} placeholder="Type d'animal" required />
-      <input type="text" name="race" value={formData.race} onChange={handleChange} placeholder="Race" />
-      <input type="date" name="date_naissance" value={formData.date_naissance} onChange={handleChange} required />
-      <input type="text" name="proprietaire_id" value={formData.proprietaire_id} onChange={handleChange} placeholder="ID du propriétaire" required />
-      <button type="submit">{patient ? "Modifier" : "Ajouter"} le patient</button>
-    </form>
+    <div className="detail-container">
+      <h2 className="detail-title">
+        {initialData ? 'Modifier le patient' : 'Ajouter un patient'}
+      </h2>
+      <form onSubmit={handleSubmit}>
+        <div className="form-group">
+          <label>Nom</label>
+          <input
+            type="text"
+            name="name"
+            value={patient.name}
+            onChange={handleChange}
+            required
+          />
+        </div>
+
+        <div className="form-group">
+          <label>Type d'animal</label>
+          <select
+            name="animal_type"
+            value={patient.animal_type}
+            onChange={handleChange}
+            required
+          >
+            <option value="">-- Choisir --</option>
+            <option value="CAT">Chat</option>
+            <option value="DOG">Chien</option>
+            <option value="RABBIT">Lapin</option>
+          </select>
+        </div>
+
+        <div className="form-group">
+          <label>Race</label>
+          <input
+            type="text"
+            name="breed"
+            value={patient.breed}
+            onChange={handleChange}
+            required
+          />
+        </div>
+
+        <div className="form-group">
+          <label>Date de naissance</label>
+          <input
+            type="date"
+            name="birth_date"
+            value={patient.birth_date}
+            onChange={handleChange}
+            required
+          />
+        </div>
+
+        <div className="form-group">
+          <label>Poids (kg)</label>
+          <input
+            type="number"
+            name="weight"
+            value={patient.weight}
+            onChange={handleChange}
+            step="0.01"
+            required
+          />
+        </div>
+
+        <div className="form-group">
+          <label>Sexe</label>
+          <select
+            name="sex"
+            value={patient.sex}
+            onChange={handleChange}
+            required
+          >
+            <option value="">-- Choisir --</option>
+            <option value="MALE">Mâle</option>
+            <option value="FEMALE">Femelle</option>
+          </select>
+        </div>
+
+        <div className="form-group">
+          <label>Propriétaire</label>
+          <select
+            name="owner"
+            value={patient.owner}
+            onChange={handleChange}
+            required
+          >
+            <option value="">-- Choisir --</option>
+            {owners.map((owner) => (
+              <option key={owner.id} value={owner.id}>
+                {owner.first_name} {owner.last_name}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        <button type="submit" className="button">
+          {initialData ? 'Mettre à jour' : 'Ajouter'}
+        </button>
+      </form>
+    </div>
   );
 };
 
