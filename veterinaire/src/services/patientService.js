@@ -5,8 +5,24 @@ export const getPatients = (ownerId = null) => {
   return api.get(url);
 };
 
-export const getPatient = (id) => api.get(`/patients/${id}/`);
-export const createPatient = (data) => api.post('/patients/', data);
-export const updatePatient = (id, data) => api.put(`/patients/${id}/`, data);
-export const deletePatient = (id) => api.delete(`/patients/${id}/`);
-export const getPatientsByType = (type) => api.get(`/patients/?animal_type=${type}`);
+
+export const getPatientById = async (id) => {
+  const response = await axios.get(`${API_URL}${id}/`);
+  return response.data;
+};
+
+export const createPatient = async (patientData) => {
+  const response = await axios.post(API_URL, patientData);
+  return response.data;
+};
+
+export const updatePatient = async (id, patientData) => {
+  const response = await axios.put(`${API_URL}${id}/`, patientData);
+  return response.data;
+};
+
+export const deletePatient = async (id) => {
+  await axios.delete(`${API_URL}${id}/`);
+};
+                                                 
+
